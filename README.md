@@ -1,6 +1,6 @@
 # react-python-sql
 
-Project using React, Flash and MySQL. 
+Project using React, Flask and MySQL. 
 
 
 # To get start
