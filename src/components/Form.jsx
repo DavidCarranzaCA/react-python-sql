@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
-import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import Grid from '@material-ui/core/Grid'
 
 const styles = theme => ({
     container: {
@@ -18,8 +18,10 @@ class Inputs extends React.PureComponent {
     render() {
         const { classes, textChange, eventname, eventlocation, eventimage, artist } = this.props;
         return (
-                <ValidatorForm className={classes.container}>
-                    <TextValidator
+
+            <Grid container spacing={16} justify='center'>
+                <Grid item xs={4}>
+                    <Input
                         placeholder="Event Name"
                         onChange={textChange}
                         name="eventname"
@@ -27,7 +29,9 @@ class Inputs extends React.PureComponent {
                         errorMessages={['this field is required']}
                         value={eventname}
                     />
-                    <TextValidator
+                </Grid>
+                <Grid item xs={4}>
+                    <Input
                         placeholder="Event Location"
                         onChange={textChange}
                         name="eventlocation"
@@ -35,7 +39,9 @@ class Inputs extends React.PureComponent {
                         errorMessages={['this field is required']}
                         value={eventlocation}
                     />
-                    <TextValidator
+                </Grid>
+                <Grid item xs={4}>
+                    <Input
                         placeholder="Artist"
                         onChange={textChange}
                         name="artist"
@@ -43,7 +49,8 @@ class Inputs extends React.PureComponent {
                         errorMessages={['this field is required']}
                         value={artist}
                     />
-                </ValidatorForm>
+                </Grid>
+            </Grid >
         );
     }
 }
