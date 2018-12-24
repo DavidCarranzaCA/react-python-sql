@@ -92,7 +92,7 @@ class MediaCard extends React.PureComponent {
     const { eventData } = this.state;
     const eventCards = eventData.length > 0 ? eventData.map(newCard => {
       return (
-        <Card className={classes.card}>
+        <Card key={item[1]} className={classes.card}>
           <CardActionArea>
             <CardMedia
               className={classes.media}
