@@ -14,8 +14,8 @@ import Grid from '@material-ui/core/Grid'
 import Inputs from './Form';
 
 const styles = {
-  card: {
-    maxWidth: 345,
+  root: {
+    flexGrow: 1,
   },
   media: {
     height: 140,
@@ -28,7 +28,6 @@ class MediaCard extends React.PureComponent {
     this.state = {
       eventname: '',
       eventlocation: '',
-      eventimage: '',
       artist: '',
       eventData: []
     }
@@ -36,6 +35,7 @@ class MediaCard extends React.PureComponent {
     // binding this to functions
     this.handleTextInput = this.handleTextInput.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.onDelete = this.onDelete.bind(this);
   }
 
   componentDidMount() {
@@ -48,6 +48,7 @@ class MediaCard extends React.PureComponent {
       .then(res => res.json())
       .then(event => {
         const uniqueValues = Array.from(new Set(event));
+        console.log(uniqueValues);
         this.setState({
           eventData: [...uniqueValues]
         })
@@ -59,7 +60,6 @@ class MediaCard extends React.PureComponent {
     const postEvent = {
       eventname: this.state.eventname,
       eventlocation: this.state.eventlocation,
-      eventimage: this.state.eventimage,
       artist: this.state.artist
     }
     fetch('/newevent', {
@@ -86,13 +86,25 @@ class MediaCard extends React.PureComponent {
     this.postEvents()
   }
 
+  onDelete(id) {
+    fetch('/delete', {
+      method: 'DELETE',
+      headers: new Headers({ 'content-type': 'application/json' }),
+      body: JSON.stringify(id)
+    })
+    .then(res => {
+      return this.getEvents()
+    })
+    .catch(err => console.log(err))
+  }
+
   render() {
     // destructuring 
     const { classes } = this.props;
     const { eventData } = this.state;
     const eventCards = eventData.length > 0 ? eventData.map(newCard => {
       return (
-        <Card key={item[1]} className={classes.card}>
+        <Card key={newCard[0]}>
           <CardActionArea>
             <CardMedia
               className={classes.media}
@@ -100,16 +112,19 @@ class MediaCard extends React.PureComponent {
             />
             <CardContent>
               <Typography gutterBottom variant="h5" component="h2">
-              {newCard[1]} - {newCard[2]}
-          </Typography>
+                {newCard[1]} - {newCard[2]}
+              </Typography>
               <Typography component="p">
-                Add Artist
-        </Typography>
+                {newCard[5]}
+              </Typography>
             </CardContent>
           </CardActionArea>
+          <CardActions>
+            <Button size="small" justify="flex-end" onClick={() => this.onDelete(newCard[0])}>Delete</Button>
+          </CardActions>
         </Card>
       )
-    }) : <Card className={classes.card}>
+    }) : <Card>
         <CardActionArea>
           <CardMedia
             className={classes.media}
@@ -126,28 +141,32 @@ class MediaCard extends React.PureComponent {
         </CardActionArea>
       </Card>
     return (
-      <Grid container justify='center' spacing={16}>
-        <Grid item xs={12}>
-          <Card className={classes.card}>
-            <CardContent justify='center'>
-              <Typography className={classes.title} color="textSecondary" gutterBottom>
-                Create a new event!
+      <div className={classes.root}>
+        <Grid container spacing={16} justify='center'>
+          <Grid item xs={6}>
+            <Card>
+              <CardContent>
+                <Typography color="textSecondary" gutterBottom>
+                  Create a new event!
               </Typography>
-              <Inputs
-                textChange={this.handleTextInput}
-              />
-            </CardContent>
-            <CardActions>
-              <Button size="small" justify="flex-end" onClick={() => this.onSubmit()}>Submit</Button>
-            </CardActions>
-          </Card>
+                <Inputs
+                  textChange={this.handleTextInput}
+                  validText={this.state}
+                />
+              </CardContent>
+              <CardActions>
+                <Button size="small" justify="flex-end" onClick={() => this.onSubmit()}>Submit</Button>
+              </CardActions>
+            </Card>
+          </Grid>
         </Grid>
 
-        <Grid item xs={12}>
-          {eventCards}
+        <Grid container spacing={16}>
+          <Grid item xs={12}>
+            {eventCards}
+          </Grid>
         </Grid>
-
-      </Grid>
+      </div>
     );
   }
 }

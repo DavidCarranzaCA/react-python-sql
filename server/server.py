@@ -17,7 +17,11 @@ def index():
 def getevents():
     cur = mysql.connection.cursor()
     cur.execute("""
-    SELECT * FROM Events 
+    SELECT 
+    *,
+    a.ArtistName 
+    FROM Events
+    INNER JOIN Artist a ON a.EventId = Events.Event 
     """)
     data = cur.fetchall()
     return jsonify(data)
@@ -27,12 +31,32 @@ def newevent():
     data = request.get_json()
     ename = data.get('eventname')
     elocation = data.get('eventlocation')
-    eimage = data.get('eventimage')
+    artist = data.get('artist')
+    eimage = 'https://picsum.photos/400/?random'
     cur = mysql.connection.cursor()
     insert_data = (str(ename), str(elocation), str(eimage))
-    cur.execute("INSERT INTO Events (`EventName`, `EventLocation`, `EventImage`) VALUES (%s,%s,%s)", insert_data)
+    event_sql = "INSERT INTO Events (`EventName`, `EventLocation`, `EventImage`) VALUES (%s,%s,%s)"
+    
+    cur.execute(event_sql, insert_data)
+    id = cur.lastrowid
+    print(id)
+
+    artist_data = (str(artist), id)
+    artist_sql = "INSERT INTO Artist (`ArtistName`, `EventId`) VALUES (%s, %s)"
+    cur.execute(artist_sql, artist_data)
     mysql.connection.commit()
     print(data)
+    return str(data)
+
+@app.route('/delete', methods=['DELETE'])
+def delete():
+    data = request.get_json()
+    print(data)
+    id = data
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM Artist WHERE EventId = %s" % (id))
+    cur.execute("DELETE FROM Events WHERE Event = %s" % (id))
+    mysql.connection.commit()
     return str(data)
 
 if __name__ == "__main__":
