@@ -16,7 +16,7 @@ class Inputs extends React.PureComponent {
         super(props);
     }
     render() {
-        const { classes, textChange, eventname, eventlocation, eventimage, artist } = this.props;
+        const { textChange } = this.props;
         return (
 
             <Grid container spacing={16} justify='center'>
@@ -25,9 +25,6 @@ class Inputs extends React.PureComponent {
                         placeholder="Event Name"
                         onChange={textChange}
                         name="eventname"
-                        validators={['required']}
-                        errorMessages={['this field is required']}
-                        value={eventname}
                     />
                 </Grid>
                 <Grid item xs={4}>
@@ -35,9 +32,6 @@ class Inputs extends React.PureComponent {
                         placeholder="Event Location"
                         onChange={textChange}
                         name="eventlocation"
-                        validators={['required']}
-                        errorMessages={['this field is required']}
-                        value={eventlocation}
                     />
                 </Grid>
                 <Grid item xs={4}>
@@ -45,9 +39,6 @@ class Inputs extends React.PureComponent {
                         placeholder="Artist"
                         onChange={textChange}
                         name="artist"
-                        validators={['required']}
-                        errorMessages={['this field is required']}
-                        value={artist}
                     />
                 </Grid>
             </Grid >

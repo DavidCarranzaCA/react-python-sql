@@ -69,6 +69,11 @@ class MediaCard extends React.PureComponent {
     })
       .then(res => {
         if (res) {
+          this.setState({
+            eventname: '',
+            eventlocation: '',
+            artist: '',
+          })
           return this.getEvents()
         }
       })
@@ -83,7 +88,7 @@ class MediaCard extends React.PureComponent {
   }
 
   onSubmit() {
-    this.postEvents()
+    return this.postEvents()
   }
 
   onDelete(id) {
